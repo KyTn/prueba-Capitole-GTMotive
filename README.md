@@ -1,23 +1,151 @@
-# prueba-Capitole-GTMotive
+# Prueba técnica Capitole · GT Motive
 
-Microservicio .NET 9 para gestionar vehículos y sus alquileres.
+Microservicio REST desarrollado con .NET 9 para gestionar una flota de vehículos y
+sus alquileres. La API permite crear y consultar vehículos, alquilarlos y registrar
+su devolución. Los endpoints de negocio están protegidos mediante JWT y permisos.
+
+## Tecnologías
+
+- .NET SDK 9.0.203
+- ASP.NET Core, MediatR y xUnit
+- MongoDB 8
+- IdentityServer/JWT para autenticación
+- Docker Compose y MockServer para el registro de personas
 
 ## Arquitectura
 
-- `Domain` contiene el modelo, invariantes, eventos y puertos.
-- `ApplicationCore` contiene comandos/queries MediatR, handlers y casos de uso conformes
-  a `IUseCase`, `IUseCaseInput` e `IUseCaseOutput`.
-- `Api` contiene DTOs HTTP puros, controllers y presenters. Los controllers mapean cada
-  request HTTP al comando/query de ApplicationCore y lo envían mediante `IMediator`.
-- `Infrastructure` implementa MongoDB, bus, telemetría, logging, tiempo y consulta de
-  personas; `Host` compone la aplicación.
+La solución sigue una arquitectura hexagonal:
 
-## Devolver un vehículo
+- `Domain`: entidades, invariantes, eventos y puertos de dominio.
+- `ApplicationCore`: casos de uso, comandos y queries de MediatR.
+- `Api`: controllers, contratos HTTP, presenters y autorización.
+- `Infrastructure`: persistencia MongoDB, mensajería, telemetría, logging y acceso al
+  registro de personas.
+- `Host`: composición, configuración, autenticación y pipeline HTTP.
 
-Un vehículo con alquiler activo puede devolverse indicando la misma persona y vehículo:
+Los tests se dividen en `unit`, `functional` e `infrastructure`.
+
+## Requisitos
+
+- [.NET SDK 9.0.203](global.json), o un parche posterior compatible.
+- Docker Desktop con Docker Compose, si se ejecutan las dependencias o toda la
+  aplicación en contenedores.
+
+## Configuración
+
+En desarrollo, la configuración se encuentra en
+[`appsettings.Development.json`](src/GtMotive.Estimate.Microservice.Host/appsettings.Development.json).
+Los valores pueden sobrescribirse con variables de entorno usando `__` como
+separador:
+
+| Variable | Descripción | Valor local |
+|---|---|---|
+| `AppSettings__JwtAuthority` | Autoridad emisora de los JWT; es obligatoria | `https://identity.mygtmotive.com` |
+| `MongoDb__ConnectionString` | Conexión a MongoDB | `mongodb://localhost:27018` |
+| `MongoDb__MongoDbDatabaseName` | Base de datos | `prueba-capitole-gtmotive` |
+| `MongoDb__VehiclesCollectionName` | Colección de vehículos | `vehicles` |
+| `MongoDb__RentalsCollectionName` | Colección de alquileres | `rentals` |
+| `PersonRegistry__BaseUrl` | URL del registro de personas | `http://localhost:1080` |
+| `ASPNETCORE_URLS` | Direcciones en las que escucha el Host | `http://localhost:8080` |
+
+No se deben almacenar tokens, credenciales ni valores de producción en el
+repositorio.
+
+## Ejecución local
+
+Inicia MongoDB y MockServer, y después ejecuta el Host:
+
+```powershell
+docker compose up -d mongodb mockserver
+dotnet run --project src/GtMotive.Estimate.Microservice.Host/GtMotive.Estimate.Microservice.Host.csproj
+```
+
+Comprueba que el servicio está disponible:
+
+```powershell
+Invoke-WebRequest http://localhost:8080/health/live
+```
+
+La documentación OpenAPI/Swagger está disponible en el Host durante la ejecución.
+La ruta de salud es pública; todos los endpoints de negocio requieren un bearer
+token válido.
+
+## Ejecución con Docker Compose
+
+Puedes personalizar puertos, colecciones y opciones de Swagger copiando el archivo
+de ejemplo:
+
+```powershell
+Copy-Item .env.example .env
+docker compose up --build -d
+docker compose ps
+Invoke-WebRequest http://localhost:8080/health/live
+```
+
+La aplicación se publica en `${APP_PORT:-8080}`, MockServer en
+`${MOCKSERVER_PORT:-1080}` y MongoDB en `${MONGODB_PORT:-27018}`. El volumen de
+MongoDB persiste al ejecutar `docker compose down`.
+
+Para detener el entorno:
+
+```powershell
+docker compose down
+```
+
+## Autenticación y autorización
+
+La API valida el JWT contra `AppSettings:JwtAuthority`. Cada operación exige un
+claim `permission` exacto y sensible a mayúsculas:
+
+| Método y ruta | Recurso | Permiso requerido |
+|---|---|---|
+| `POST /vehicles` | `Vehicles` | `Vehicles.Create` |
+| `GET /vehicles` | `Vehicles` | `Vehicles.Read` |
+| `POST /rentals` | `Rentals` | `Rentals.Create` |
+| `POST /rentals/returns` | `Rentals` | `Rentals.Return` |
+
+Una petición sin credenciales válidas devuelve `401 Unauthorized`; una identidad
+autenticada sin el permiso requerido devuelve `403 Forbidden`. En ambos casos, el
+controller y el caso de uso no se ejecutan.
+
+Ejemplo de consulta autorizada:
+
+```powershell
+$token = "<JWT_DE_PRUEBA>"
+Invoke-RestMethod `
+  -Uri http://localhost:8080/vehicles `
+  -Headers @{ Authorization = "Bearer $token" }
+```
+
+## API
+
+### Crear un vehículo
 
 ```http
-POST /rentals/returns
+POST /vehicles
+Authorization: Bearer <token con Vehicles.Create>
+Content-Type: application/json
+
+{
+  "registrationNumber": "1234ABC",
+  "brand": "Toyota",
+  "model": "Corolla",
+  "manufactureDate": "2022-01-15"
+}
+```
+
+### Listar vehículos
+
+```http
+GET /vehicles
+Authorization: Bearer <token con Vehicles.Read>
+```
+
+### Alquilar un vehículo
+
+```http
+POST /rentals
+Authorization: Bearer <token con Rentals.Create>
 Content-Type: application/json
 
 {
@@ -26,64 +154,31 @@ Content-Type: application/json
 }
 ```
 
-La respuesta satisfactoria es `200 OK` e incluye el alquiler con estado `closed` y
-`endedAt`. Una persona o vehículo inexistente devuelve `404`; identificadores inválidos
-devuelven `400`; un vehículo sin alquiler activo, ya devuelto o perteneciente a otra
-persona devuelve `409`.
+### Devolver un vehículo
 
-La devolución cierra el alquiler de forma atómica, dejando disponibles tanto a la persona
-como al vehículo para un alquiler posterior.
+```http
+POST /rentals/returns
+Authorization: Bearer <token con Rentals.Return>
+Content-Type: application/json
 
-## Verificación
+{
+  "personId": "11111111-1111-1111-1111-111111111111",
+  "vehicleId": "22222222-2222-2222-2222-222222222222"
+}
+```
+
+Una devolución correcta responde `200 OK` y cierra el alquiler de forma atómica.
+Los errores de validación, recursos inexistentes y conflictos de negocio se
+traducen respectivamente a respuestas `400`, `404` y `409`, según la operación.
+
+## Compilación y pruebas
 
 ```powershell
-dotnet build src/microservice.sln --configuration Release
+dotnet restore src/microservice.sln
+dotnet build src/microservice.sln --configuration Release --no-restore
 dotnet test src/microservice.sln --configuration Release --no-build
 docker compose config
 ```
 
-## Ejecución fuera del contenedor
-
-El Host local escucha en `http://localhost:8080`. MongoDB y MockServer pueden ejecutarse
-como dependencias aisladas:
-
-```powershell
-docker compose up -d mongodb mockserver
-dotnet run --project src/GtMotive.Estimate.Microservice.Host/GtMotive.Estimate.Microservice.Host.csproj
-Invoke-WebRequest http://localhost:8080/health/live
-```
-
-Las variables locales relevantes son:
-
-- `MongoDb__ConnectionString` (por defecto `mongodb://localhost:27018`).
-- `MongoDb__MongoDbDatabaseName`.
-- `MongoDb__VehiclesCollectionName` y `MongoDb__RentalsCollectionName`.
-- `PersonRegistry__BaseUrl` (por defecto `http://localhost:1080`).
-- `ASPNETCORE_URLS` o el puerto `8080` definido en `launchSettings.json`.
-
-## Ejecución en contenedores
-
-Copiar `.env.example` a `.env` permite cambiar puertos, nombres de colecciones, nivel de
-log y nombre del volumen sin editar Compose:
-
-```powershell
-Copy-Item .env.example .env
-docker compose up --build -d
-docker compose ps
-Invoke-WebRequest http://localhost:8080/health/live
-Invoke-WebRequest http://localhost:8080/vehicles
-docker compose down
-```
-
-- La aplicación publica `${APP_PORT:-8080}` y escucha internamente en `8080`.
-- MockServer publica `${MOCKSERVER_PORT:-1080}` y carga
-  `docker/mockserver/expectations.json` mediante un volumen de solo lectura.
-- MongoDB usa el volumen persistente `${MONGODB_VOLUME_NAME}` en `/data/db` y publica
-  `${MONGODB_PORT:-27018}` para que el Host local use `mongodb://localhost:27018`.
-- La aplicación espera a MongoDB saludable y expone `/health/live`; Compose y la imagen
-  usan esa ruta para comprobar el proceso.
-- `docker compose down` conserva los datos. Para eliminar también el volumen:
-  `docker compose down --volumes`.
-
-Consulta la guía actual en
-[`specs/005-usecase-mediatr-integration/quickstart.md`](specs/005-usecase-mediatr-integration/quickstart.md).
+La guía detallada de verificación y los contratos de autorización están en
+[`specs/006-api-authorization-policies/quickstart.md`](specs/006-api-authorization-policies/quickstart.md).
