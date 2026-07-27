@@ -7,6 +7,7 @@ using GtMotive.Estimate.Microservice.Api.Filters;
 using GtMotive.Estimate.Microservice.ApplicationCore;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.DependencyInjection;
 
 [assembly: CLSCompliant(false)]
@@ -37,6 +38,8 @@ namespace GtMotive.Estimate.Microservice.Api
         public static void AddApiDependencies(this IServiceCollection services)
         {
             services.AddAuthorization(AuthorizationOptionsExtensions.Configure);
+            services.AddScoped<Domain.Interfaces.IAuthorizationService, AuthorizationService>();
+            services.AddScoped<IAuthorizationHandler, ApiAuthorizationHandler>();
             services.AddMediatR(typeof(ApplicationConfiguration).GetTypeInfo().Assembly);
             services.AddUseCases();
             services.AddPresenters();

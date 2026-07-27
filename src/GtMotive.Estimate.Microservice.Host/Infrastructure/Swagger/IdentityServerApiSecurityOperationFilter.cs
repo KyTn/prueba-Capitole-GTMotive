@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using GtMotive.Estimate.Microservice.Api.Authorization;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
@@ -29,11 +30,22 @@ namespace GtMotive.Estimate.Microservice.Host.Infrastructure.Swagger
                 .ToArray();
 
             var attributes = controllerAttributes.Union(methodAttributes).ToArray();
+            var hasApiAuthorization =
+                context.MethodInfo.DeclaringType?.IsDefined(
+                    typeof(ApiAuthorizationAttribute),
+                    inherit: true) == true ||
+                context.MethodInfo.IsDefined(
+                    typeof(ApiAuthorizationAttribute),
+                    inherit: true);
 
-            if (attributes.Length != 0)
+            if (attributes.Length != 0 || hasApiAuthorization)
             {
-                operation.Responses.Add("401", new OpenApiResponse { Description = "Unauthorized" });
-                operation.Responses.Add("403", new OpenApiResponse { Description = "Forbidden" });
+                operation.Responses.TryAdd(
+                    "401",
+                    new OpenApiResponse { Description = "Unauthorized" });
+                operation.Responses.TryAdd(
+                    "403",
+                    new OpenApiResponse { Description = "Forbidden" });
 
                 operation.Security =
                 [

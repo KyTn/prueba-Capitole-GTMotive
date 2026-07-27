@@ -62,6 +62,8 @@ builder.Services.AddHealthChecks();
 var appSettingsSection = builder.Configuration.GetSection("AppSettings");
 builder.Services.Configure<AppSettings>(appSettingsSection);
 var appSettings = appSettingsSection.Get<AppSettings>();
+ArgumentNullException.ThrowIfNull(appSettings);
+ArgumentException.ThrowIfNullOrWhiteSpace(appSettings.JwtAuthority);
 builder.Services.Configure<MongoDbSettings>(builder.Configuration.GetSection("MongoDb"));
 builder.Services.Configure<PersonRegistrySettings>(builder.Configuration.GetSection("PersonRegistry"));
 

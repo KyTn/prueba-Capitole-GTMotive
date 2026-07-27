@@ -10,6 +10,8 @@ using GtMotive.Estimate.Microservice.ApplicationCore.Rentals;
 using GtMotive.Estimate.Microservice.ApplicationCore.Vehicles;
 using GtMotive.Estimate.Microservice.Domain.Rentals;
 using GtMotive.Estimate.Microservice.Domain.Vehicles;
+using GtMotive.Estimate.Microservice.InfrastructureTests.Authorization;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
@@ -66,6 +68,16 @@ internal sealed class RentalApiFactory : WebApplicationFactory<Program>
         builder.UseEnvironment("Development");
         builder.ConfigureTestServices(services =>
         {
+            services
+                .AddAuthentication(options =>
+                {
+                    options.DefaultAuthenticateScheme = TestAuthenticationHandler.TestScheme;
+                    options.DefaultChallengeScheme = TestAuthenticationHandler.TestScheme;
+                    options.DefaultForbidScheme = TestAuthenticationHandler.TestScheme;
+                })
+                .AddScheme<AuthenticationSchemeOptions, TestAuthenticationHandler>(
+                    TestAuthenticationHandler.TestScheme,
+                    _ => { });
             services.RemoveAll<IPersonRegistry>();
             services.RemoveAll<IVehicleRepository>();
             services.RemoveAll<IRentalRepository>();

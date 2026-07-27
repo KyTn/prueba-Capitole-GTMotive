@@ -1,8 +1,8 @@
 using System.Threading;
 using System.Threading.Tasks;
+using GtMotive.Estimate.Microservice.Api.Authorization;
 using GtMotive.Estimate.Microservice.ApplicationCore.Vehicles.Create;
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,8 +13,12 @@ namespace GtMotive.Estimate.Microservice.Api.Vehicles.Create;
 public sealed class VehiclesController(IMediator mediator) : ControllerBase
 {
     [HttpPost]
-    [AllowAnonymous]
+    [ApiAuthorization(
+        AuthorizationCatalog.Resources.Vehicles,
+        AuthorizationCatalog.Policies.VehiclesCreate)]
     [ProducesResponseType(typeof(CreateVehicleResponse), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status409Conflict)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status422UnprocessableEntity)]
