@@ -59,5 +59,8 @@ public sealed class ListVehiclesUseCaseTests
 
         public Task<IReadOnlyList<Vehicle>> GetAllAsync(CancellationToken cancellationToken) =>
             throw new InvalidOperationException("Read failed.");
+
+        public Task<Vehicle> GetByIdAsync(Guid id, CancellationToken cancellationToken) =>
+            throw new NotSupportedException();
     }
 }

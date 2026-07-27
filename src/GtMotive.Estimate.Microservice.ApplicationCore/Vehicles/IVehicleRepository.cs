@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using GtMotive.Estimate.Microservice.Domain;
@@ -15,6 +16,8 @@ public interface IVehicleRepository
     Task AddAsync(Vehicle vehicle, CancellationToken cancellationToken);
 
     Task<IReadOnlyList<Vehicle>> GetAllAsync(CancellationToken cancellationToken);
+
+    Task<Vehicle> GetByIdAsync(Guid id, CancellationToken cancellationToken);
 }
 
 public sealed class VehicleAlreadyExistsException : DomainException

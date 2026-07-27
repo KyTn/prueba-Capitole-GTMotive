@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -55,5 +56,11 @@ public sealed class MongoVehicleRepository : IVehicleRepository
             .ToListAsync(cancellationToken);
 
         return documents.Select(VehicleMapper.ToDomain).ToArray();
+    }
+
+    public async Task<Vehicle> GetByIdAsync(Guid id, CancellationToken cancellationToken)
+    {
+        var document = await _vehicles.Find(vehicle => vehicle.Id == id).FirstOrDefaultAsync(cancellationToken);
+        return document is null ? null : VehicleMapper.ToDomain(document);
     }
 }

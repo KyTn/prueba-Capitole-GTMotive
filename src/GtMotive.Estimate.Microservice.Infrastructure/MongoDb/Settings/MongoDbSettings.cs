@@ -7,5 +7,7 @@
         public string MongoDbDatabaseName { get; set; }
 
         public string VehiclesCollectionName { get; set; } = "vehicles";
+
+        public string RentalsCollectionName { get; set; } = "rentals";
     }
 }

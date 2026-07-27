@@ -16,6 +16,8 @@ services:
       MongoDb__ConnectionString: mongodb://mongodb:27017
       MongoDb__MongoDbDatabaseName: prueba-capitole-gtmotive
       MongoDb__VehiclesCollectionName: vehicles
+      MongoDb__RentalsCollectionName: rentals
+      PersonRegistry__BaseUrl: http://mockserver:1080
       MockServer__BaseUrl: http://mockserver:1080
     depends_on:
       mongodb:

@@ -37,6 +37,9 @@ public sealed class ListVehiclesEmptyFleetTests
 
         public Task<IReadOnlyList<Vehicle>> GetAllAsync(CancellationToken cancellationToken) =>
             Task.FromResult<IReadOnlyList<Vehicle>>(Array.Empty<Vehicle>());
+
+        public Task<Vehicle> GetByIdAsync(Guid id, CancellationToken cancellationToken) =>
+            throw new NotSupportedException();
     }
 
     private sealed class NullLogger<T> : IAppLogger<T>

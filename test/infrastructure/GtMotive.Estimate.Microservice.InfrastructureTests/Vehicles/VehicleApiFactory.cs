@@ -35,6 +35,8 @@ internal sealed class VehicleApiFactory : WebApplicationFactory<Program>
 internal sealed class FixedClock(DateOnly today) : IClock
 {
     public DateOnly Today { get; } = today;
+
+    public DateTimeOffset UtcNow { get; } = new(today.ToDateTime(TimeOnly.MinValue), TimeSpan.Zero);
 }
 
 internal sealed class InMemoryVehicleRepository : IVehicleRepository
@@ -62,5 +64,11 @@ internal sealed class InMemoryVehicleRepository : IVehicleRepository
     {
         cancellationToken.ThrowIfCancellationRequested();
         return Task.FromResult<IReadOnlyList<Vehicle>>(_vehicles.Values.ToArray());
+    }
+
+    public Task<Vehicle> GetByIdAsync(Guid id, CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+        return Task.FromResult(_vehicles.Values.SingleOrDefault(vehicle => vehicle.Id == id));
     }
 }

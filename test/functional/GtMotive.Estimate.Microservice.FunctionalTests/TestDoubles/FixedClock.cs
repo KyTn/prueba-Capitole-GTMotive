@@ -6,4 +6,6 @@ namespace GtMotive.Estimate.Microservice.FunctionalTests.TestDoubles;
 internal sealed class FixedClock(DateOnly today) : IClock
 {
     public DateOnly Today { get; } = today;
+
+    public DateTimeOffset UtcNow { get; } = new(today.ToDateTime(TimeOnly.MinValue), TimeSpan.Zero);
 }

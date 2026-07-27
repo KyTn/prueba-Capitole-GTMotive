@@ -1,4 +1,5 @@
 using System.Collections.Concurrent;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -33,5 +34,11 @@ internal sealed class InMemoryVehicleRepository : IVehicleRepository
     {
         cancellationToken.ThrowIfCancellationRequested();
         return Task.FromResult<IReadOnlyList<Vehicle>>(_vehicles.Values.ToArray());
+    }
+
+    public Task<Vehicle> GetByIdAsync(Guid id, CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+        return Task.FromResult(_vehicles.Values.SingleOrDefault(vehicle => vehicle.Id == id));
     }
 }

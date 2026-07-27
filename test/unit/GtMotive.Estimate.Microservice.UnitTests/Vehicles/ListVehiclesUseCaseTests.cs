@@ -80,6 +80,9 @@ public sealed class ListVehiclesUseCaseTests
             cancellationToken.ThrowIfCancellationRequested();
             return Task.FromResult(vehicles);
         }
+
+        public Task<Vehicle> GetByIdAsync(Guid id, CancellationToken cancellationToken) =>
+            throw new NotSupportedException();
     }
 
     private sealed class NullLogger<T> : IAppLogger<T>
