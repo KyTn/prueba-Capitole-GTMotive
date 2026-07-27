@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using GtMotive.Estimate.Microservice.ApplicationCore.Common.Time;
 using GtMotive.Estimate.Microservice.ApplicationCore.People;
 using GtMotive.Estimate.Microservice.ApplicationCore.Vehicles;
+using GtMotive.Estimate.Microservice.ApplicationCore.UseCases;
 using GtMotive.Estimate.Microservice.Domain.Interfaces;
 using GtMotive.Estimate.Microservice.Domain.Rentals;
 
@@ -14,8 +15,13 @@ public sealed class RentVehicleUseCase(
     IVehicleRepository vehicleRepository,
     IRentalRepository rentalRepository,
     IClock clock,
-    IAppLogger<RentVehicleUseCase> logger)
+    IAppLogger<RentVehicleUseCase> logger) : IUseCase<RentVehicleCommand>
 {
+    async Task IUseCase<RentVehicleCommand>.Execute(RentVehicleCommand input)
+    {
+        await ExecuteAsync(input, CancellationToken.None);
+    }
+
     public async Task<RentVehicleResult> ExecuteAsync(
         RentVehicleCommand command,
         CancellationToken cancellationToken)

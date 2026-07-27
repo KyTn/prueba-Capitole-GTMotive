@@ -1,6 +1,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using GtMotive.Estimate.Microservice.ApplicationCore.Vehicles.Create;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -9,7 +10,7 @@ namespace GtMotive.Estimate.Microservice.Api.Vehicles.Create;
 
 [ApiController]
 [Route("vehicles")]
-public sealed class VehiclesController(CreateVehicleUseCase useCase) : ControllerBase
+public sealed class VehiclesController(IMediator mediator) : ControllerBase
 {
     [HttpPost]
     [AllowAnonymous]
@@ -21,7 +22,7 @@ public sealed class VehiclesController(CreateVehicleUseCase useCase) : Controlle
         [FromBody] CreateVehicleRequest request,
         CancellationToken cancellationToken)
     {
-        var result = await useCase.ExecuteAsync(
+        var result = await mediator.Send(
             new CreateVehicleCommand(
                 request.RegistrationNumber,
                 request.Brand,

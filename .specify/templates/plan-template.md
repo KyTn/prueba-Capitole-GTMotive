@@ -31,19 +31,24 @@
 
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-- **Dependency direction**: Confirm Domain is framework-free, ApplicationCore depends on
-  Domain/ports only, Infrastructure implements secondary adapters, and Api/Host remain
-  inbound adapter/composition root.
+- **Dependency direction**: Confirm Domain is framework-free; ApplicationCore owns use
+  cases, `IRequest<T>` messages and handlers without concrete adapters; Infrastructure
+  implements secondary adapters; Api owns only HTTP DTOs/controllers/presenters; and Host
+  remains the composition root.
 - **Domain invariants**: Identify the aggregate/value-object/domain-service location for
   every affected invariant and show that no adapter can bypass it.
-- **Use cases and contracts**: Map each business action to an independent use case, ports,
-  documented REST success/error contracts, and cancellation behavior.
+- **Use cases and contracts**: Map each business action to `IUseCase<TInput>`,
+  `IUseCaseInput`, `IUseCaseOutput`, one ApplicationCore `IRequestHandler`, documented
+  REST success/error contracts, explicit HTTP-to-request mapping, and cancellation.
 - **Test matrix**: Identify distinct unit, functional-without-Host, and
   infrastructure-at-Host tests plus coverage for every affected invariant.
 - **Reproducibility**: Define local and Docker execution with no manually installed
   external service, no embedded secret, official .NET images, and Visual Studio support.
-- **Quality and simplicity**: Justify new abstractions/dependencies and define build,
-  analyzer, logging, OpenAPI, and compatibility gates.
+- **Events and observability**: Define which successful mutations publish immutable
+  events through `IBusFactory`, prove failure paths publish none, and define non-sensitive
+  `ITelemetry` outcomes/duration for every handler.
+- **Quality and simplicity**: Justify new abstractions/dependencies and define restore,
+  build, analyzer, dependency-boundary, logging, OpenAPI, and compatibility gates.
 
 Any failed gate MUST be resolved before Phase 0 or recorded in Complexity Tracking with
 written justification, impact, and a dated correction plan.

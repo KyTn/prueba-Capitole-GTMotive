@@ -11,5 +11,6 @@
   <ItemGroup>
     <ProjectReference Include="..\..\..\src\GtMotive.Estimate.Microservice.ApplicationCore\GtMotive.Estimate.Microservice.ApplicationCore.csproj" />
     <ProjectReference Include="..\..\..\src\GtMotive.Estimate.Microservice.Domain\GtMotive.Estimate.Microservice.Domain.csproj" />
+    <ProjectReference Include="..\..\..\src\GtMotive.Estimate.Microservice.Api\GtMotive.Estimate.Microservice.Api.csproj" />
   </ItemGroup>
 </Project>

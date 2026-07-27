@@ -37,7 +37,7 @@ namespace GtMotive.Estimate.Microservice.Api
         public static void AddApiDependencies(this IServiceCollection services)
         {
             services.AddAuthorization(AuthorizationOptionsExtensions.Configure);
-            services.AddMediatR(typeof(ApiConfiguration).GetTypeInfo().Assembly);
+            services.AddMediatR(typeof(ApplicationConfiguration).GetTypeInfo().Assembly);
             services.AddUseCases();
             services.AddPresenters();
         }

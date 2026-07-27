@@ -159,6 +159,9 @@ Examples of foundational tasks (adjust based on your project):
 - [ ] TXXX Performance optimization across all stories
 - [ ] TXXX [P] Additional unit tests (if requested) in tests/unit/
 - [ ] TXXX Security hardening
+- [ ] TXXX Verify Api HTTP DTOs do not implement IRequest and Api contains no handlers
+- [ ] TXXX Verify each ApplicationCore request resolves exactly one handler
+- [ ] TXXX Verify successful mutations publish once, failures publish none, and telemetry contains no sensitive data
 - [ ] TXXX Run restore, build, analyzers, and all three test projects
 - [ ] TXXX Validate quickstart locally and with Docker from a clean environment
 - [ ] TXXX Verify `.dockerignore`, official .NET images, Visual Studio Docker profile,

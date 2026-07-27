@@ -1,3 +1,5 @@
+using GtMotive.Estimate.Microservice.ApplicationCore.UseCases;
+
 namespace GtMotive.Estimate.Microservice.ApplicationCore.Rentals.Rent;
 
 public enum RentVehicleResultType
@@ -14,7 +16,7 @@ public sealed record RentVehicleResult(
     RentVehicleResultType Type,
     RentalDto Rental,
     string Code,
-    string Detail)
+    string Detail) : IUseCaseOutput
 {
     public static RentVehicleResult Created(RentalDto rental) =>
         new(RentVehicleResultType.Created, rental, null, null);

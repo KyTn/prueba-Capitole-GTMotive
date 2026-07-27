@@ -5,6 +5,7 @@ using GtMotive.Estimate.Microservice.ApplicationCore.Vehicles.Create;
 using GtMotive.Estimate.Microservice.ApplicationCore.Vehicles.List;
 using GtMotive.Estimate.Microservice.ApplicationCore.Rentals.Rent;
 using GtMotive.Estimate.Microservice.ApplicationCore.Rentals.Return;
+using GtMotive.Estimate.Microservice.ApplicationCore.UseCases;
 
 [assembly: CLSCompliant(false)]
 
@@ -27,6 +28,10 @@ namespace GtMotive.Estimate.Microservice.ApplicationCore
             services.AddScoped<ListVehiclesUseCase>();
             services.AddScoped<RentVehicleUseCase>();
             services.AddScoped<ReturnVehicleUseCase>();
+            services.AddScoped<IUseCase<CreateVehicleCommand>>(provider => provider.GetRequiredService<CreateVehicleUseCase>());
+            services.AddScoped<IUseCase<ListVehiclesQuery>>(provider => provider.GetRequiredService<ListVehiclesUseCase>());
+            services.AddScoped<IUseCase<RentVehicleCommand>>(provider => provider.GetRequiredService<RentVehicleUseCase>());
+            services.AddScoped<IUseCase<ReturnVehicleCommand>>(provider => provider.GetRequiredService<ReturnVehicleUseCase>());
             return services;
         }
     }

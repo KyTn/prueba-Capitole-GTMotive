@@ -1,4 +1,5 @@
 using GtMotive.Estimate.Microservice.ApplicationCore.Vehicles;
+using GtMotive.Estimate.Microservice.ApplicationCore.UseCases;
 
 namespace GtMotive.Estimate.Microservice.ApplicationCore.Vehicles.Create;
 
@@ -14,7 +15,7 @@ public sealed record CreateVehicleResult(
     CreateVehicleResultType Type,
     VehicleDto Vehicle,
     string Code,
-    string Detail)
+    string Detail) : IUseCaseOutput
 {
     public static CreateVehicleResult Created(VehicleDto vehicle) =>
         new(CreateVehicleResultType.Created, vehicle, null, null);

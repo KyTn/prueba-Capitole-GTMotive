@@ -2,6 +2,16 @@
 
 Microservicio .NET 9 para gestionar vehículos y sus alquileres.
 
+## Arquitectura
+
+- `Domain` contiene el modelo, invariantes, eventos y puertos.
+- `ApplicationCore` contiene comandos/queries MediatR, handlers y casos de uso conformes
+  a `IUseCase`, `IUseCaseInput` e `IUseCaseOutput`.
+- `Api` contiene DTOs HTTP puros, controllers y presenters. Los controllers mapean cada
+  request HTTP al comando/query de ApplicationCore y lo envían mediante `IMediator`.
+- `Infrastructure` implementa MongoDB, bus, telemetría, logging, tiempo y consulta de
+  personas; `Host` compone la aplicación.
+
 ## Devolver un vehículo
 
 Un vehículo con alquiler activo puede devolverse indicando la misma persona y vehículo:
@@ -32,5 +42,5 @@ dotnet test src/microservice.sln --configuration Release --no-build
 docker compose config
 ```
 
-Consulta la guía completa en
-[`specs/004-devolver-vehiculo/quickstart.md`](specs/004-devolver-vehiculo/quickstart.md).
+Consulta la guía actual en
+[`specs/005-usecase-mediatr-integration/quickstart.md`](specs/005-usecase-mediatr-integration/quickstart.md).

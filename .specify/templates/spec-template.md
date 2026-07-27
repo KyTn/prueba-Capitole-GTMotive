@@ -115,6 +115,8 @@ interpretation as `[NEEDS CLARIFICATION: ...]` before planning.
 ### Contract and Test Obligations *(mandatory)*
 
 - **HTTP contract**: [Success status/body and expected domain-error mappings]
+- **Application contract**: [IUseCase/IUseCaseInput/IUseCaseOutput and IRequest/handler mapping]
+- **Events and telemetry**: [Successful mutation events, no-event failures, outcome/duration signals]
 - **Unit coverage**: [Pure methods and invariants to verify without external dependencies]
 - **Functional coverage**: [Application integration scenarios excluding Host]
 - **Infrastructure coverage**: [REST/Host scenarios]

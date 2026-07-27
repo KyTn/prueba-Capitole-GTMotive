@@ -32,6 +32,12 @@
 - [ ] CHK005 Item with specific criteria
 - [ ] CHK006 Final item in this category
 
+## Architecture and Observability
+
+- [ ] CHK007 HTTP DTOs remain separate from ApplicationCore IRequest messages
+- [ ] CHK008 ApplicationCore owns handlers and delegates business rules to IUseCase implementations
+- [ ] CHK009 Domain event and telemetry obligations cover success, failure, and cancellation
+
 ## Notes
 
 - Check items off as completed: `[x]`

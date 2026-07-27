@@ -1,9 +1,10 @@
 using System;
 using System.Collections.Generic;
+using GtMotive.Estimate.Microservice.ApplicationCore.UseCases;
 
 namespace GtMotive.Estimate.Microservice.ApplicationCore.Vehicles.List;
 
-public sealed class ListVehiclesResult
+public sealed class ListVehiclesResult : IUseCaseOutput
 {
     public ListVehiclesResult(IReadOnlyList<VehicleDto> vehicles)
     {

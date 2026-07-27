@@ -13,6 +13,7 @@ using GtMotive.Estimate.Microservice.ApplicationCore.People;
 using GtMotive.Estimate.Microservice.ApplicationCore.Rentals;
 using GtMotive.Estimate.Microservice.Infrastructure.MongoDb.Rentals;
 using GtMotive.Estimate.Microservice.Infrastructure.People;
+using GtMotive.Estimate.Microservice.Infrastructure.Messaging;
 using Microsoft.Extensions.DependencyInjection;
 
 [assembly: CLSCompliant(false)]
@@ -32,6 +33,8 @@ namespace GtMotive.Estimate.Microservice.Infrastructure
             services.AddScoped<IVehicleRepository, MongoVehicleRepository>();
             services.AddScoped<IRentalRepository, MongoRentalRepository>();
             services.AddSingleton<IPersonRegistry, HttpPersonRegistry>();
+            services.AddScoped<IBus, Bus>();
+            services.AddScoped<IBusFactory, BusFactory>();
 
             if (!isDevelopment)
             {

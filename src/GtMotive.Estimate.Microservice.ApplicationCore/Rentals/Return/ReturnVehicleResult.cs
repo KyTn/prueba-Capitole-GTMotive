@@ -1,3 +1,5 @@
+using GtMotive.Estimate.Microservice.ApplicationCore.UseCases;
+
 namespace GtMotive.Estimate.Microservice.ApplicationCore.Rentals.Return;
 
 public enum ReturnVehicleResultType
@@ -15,7 +17,7 @@ public sealed record ReturnVehicleResult(
     ReturnVehicleResultType Type,
     RentalDto Rental,
     string Code,
-    string Detail)
+    string Detail) : IUseCaseOutput
 {
     public static ReturnVehicleResult Returned(RentalDto rental) =>
         new(ReturnVehicleResultType.Returned, rental, null, null);

@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using GtMotive.Estimate.Microservice.ApplicationCore.Common.Time;
 using GtMotive.Estimate.Microservice.ApplicationCore.Vehicles;
+using GtMotive.Estimate.Microservice.ApplicationCore.UseCases;
 using GtMotive.Estimate.Microservice.Domain.Interfaces;
 using GtMotive.Estimate.Microservice.Domain.Vehicles;
 
@@ -11,8 +12,13 @@ namespace GtMotive.Estimate.Microservice.ApplicationCore.Vehicles.Create;
 public sealed class CreateVehicleUseCase(
     IVehicleRepository repository,
     IClock clock,
-    IAppLogger<CreateVehicleUseCase> logger)
+    IAppLogger<CreateVehicleUseCase> logger) : IUseCase<CreateVehicleCommand>
 {
+    async Task IUseCase<CreateVehicleCommand>.Execute(CreateVehicleCommand input)
+    {
+        await ExecuteAsync(input, CancellationToken.None);
+    }
+
     public async Task<CreateVehicleResult> ExecuteAsync(
         CreateVehicleCommand command,
         CancellationToken cancellationToken)

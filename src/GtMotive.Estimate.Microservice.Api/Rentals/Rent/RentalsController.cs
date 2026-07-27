@@ -1,6 +1,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using GtMotive.Estimate.Microservice.ApplicationCore.Rentals.Rent;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -9,7 +10,7 @@ namespace GtMotive.Estimate.Microservice.Api.Rentals.Rent;
 
 [ApiController]
 [Route("rentals")]
-public sealed class RentalsController(RentVehicleUseCase useCase) : ControllerBase
+public sealed class RentalsController(IMediator mediator) : ControllerBase
 {
     [HttpPost]
     [AllowAnonymous]
@@ -22,7 +23,7 @@ public sealed class RentalsController(RentVehicleUseCase useCase) : ControllerBa
         [FromBody] RentVehicleRequest request,
         CancellationToken cancellationToken)
     {
-        var result = await useCase.ExecuteAsync(
+        var result = await mediator.Send(
             new RentVehicleCommand(request.PersonId, request.VehicleId),
             cancellationToken);
         return RentVehiclePresenter.Present(this, result);
