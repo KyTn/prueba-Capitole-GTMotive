@@ -1,0 +1,60 @@
+name: prueba-capitole-gtmotive
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: prueba-capitole-gtmotive:latest
+    container_name: prueba-capitole-gtmotive-app
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_URLS: http://+:8080
+      MongoDb__ConnectionString: mongodb://mongodb:27017
+      MongoDb__MongoDbDatabaseName: prueba-capitole-gtmotive
+      MockServer__BaseUrl: http://mockserver:1080
+    depends_on:
+      mongodb:
+        condition: service_healthy
+      mockserver:
+        condition: service_started
+    networks:
+      - prueba-capitole-gtmotive
+
+  mongodb:
+    image: mongo:latest
+    container_name: prueba-capitole-gtmotive-mongodb
+    restart: unless-stopped
+    volumes:
+      - mongodb-data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.runCommand({ ping: 1 }).ok"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    networks:
+      - prueba-capitole-gtmotive
+
+  mockserver:
+    image: mockserver/mockserver:latest
+    container_name: prueba-capitole-gtmotive-mockserver
+    restart: unless-stopped
+    ports:
+      - "1080:1080"
+    environment:
+      MOCKSERVER_LOG_LEVEL: INFO
+    networks:
+      - prueba-capitole-gtmotive
+
+volumes:
+  mongodb-data:
+    name: prueba-capitole-gtmotive-mongodb-data
+
+networks:
+  prueba-capitole-gtmotive:
+    name: prueba-capitole-gtmotive
+    driver: bridge
