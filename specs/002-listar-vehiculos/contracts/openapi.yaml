@@ -1,0 +1,87 @@
+openapi: 3.0.3
+info:
+  title: GT Motive Fleet API
+  version: 1.0.0
+paths:
+  /vehicles:
+    get:
+      summary: List all vehicles registered in the fleet
+      operationId: listVehicles
+      tags:
+        - Vehicles
+      responses:
+        '200':
+          description: Complete vehicle collection; empty when no vehicles are registered
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Vehicle'
+              examples:
+                populated:
+                  summary: Fleet with vehicles
+                  value:
+                    - id: 7e625df4-b89a-4a56-81b1-17097979847c
+                      registrationNumber: 1234ABC
+                      brand: Toyota
+                      model: Corolla
+                      manufactureDate: '2024-06-15'
+                empty:
+                  summary: Empty fleet
+                  value: []
+        '500':
+          description: Unexpected failure without internal details
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+components:
+  schemas:
+    Vehicle:
+      type: object
+      additionalProperties: false
+      required:
+        - id
+        - registrationNumber
+        - brand
+        - model
+        - manufactureDate
+      properties:
+        id:
+          type: string
+          format: uuid
+        registrationNumber:
+          type: string
+          minLength: 1
+        brand:
+          type: string
+          minLength: 1
+        model:
+          type: string
+          minLength: 1
+        manufactureDate:
+          type: string
+          format: date
+    Problem:
+      type: object
+      required:
+        - status
+        - title
+        - code
+      properties:
+        type:
+          type: string
+          format: uri
+        title:
+          type: string
+        status:
+          type: integer
+          enum:
+            - 500
+        detail:
+          type: string
+        code:
+          type: string
+          enum:
+            - unexpected_error
