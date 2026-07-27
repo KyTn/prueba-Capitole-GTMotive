@@ -5,5 +5,7 @@
         public string ConnectionString { get; set; }
 
         public string MongoDbDatabaseName { get; set; }
+
+        public string VehiclesCollectionName { get; set; } = "vehicles";
     }
 }

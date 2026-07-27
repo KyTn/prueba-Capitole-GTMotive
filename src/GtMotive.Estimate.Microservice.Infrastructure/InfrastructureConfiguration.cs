@@ -4,6 +4,11 @@ using GtMotive.Estimate.Microservice.Domain.Interfaces;
 using GtMotive.Estimate.Microservice.Infrastructure.Interfaces;
 using GtMotive.Estimate.Microservice.Infrastructure.Logging;
 using GtMotive.Estimate.Microservice.Infrastructure.Telemetry;
+using GtMotive.Estimate.Microservice.ApplicationCore.Common.Time;
+using GtMotive.Estimate.Microservice.ApplicationCore.Vehicles;
+using GtMotive.Estimate.Microservice.Infrastructure.MongoDb;
+using GtMotive.Estimate.Microservice.Infrastructure.MongoDb.Vehicles;
+using GtMotive.Estimate.Microservice.Infrastructure.Time;
 using Microsoft.Extensions.DependencyInjection;
 
 [assembly: CLSCompliant(false)]
@@ -18,6 +23,9 @@ namespace GtMotive.Estimate.Microservice.Infrastructure
             bool isDevelopment)
         {
             services.AddScoped(typeof(IAppLogger<>), typeof(LoggerAdapter<>));
+            services.AddSingleton<IClock, SystemClock>();
+            services.AddSingleton<MongoService>();
+            services.AddScoped<IVehicleRepository, MongoVehicleRepository>();
 
             if (!isDevelopment)
             {

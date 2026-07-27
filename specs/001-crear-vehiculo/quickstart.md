@@ -59,7 +59,8 @@ Invoke-WebRequest -Uri 'http://localhost:8080/swagger/index.html'
 docker compose ps
 ```
 
-Before feature completion, pin the MongoDB image version and either add the referenced `docker-compose.dcproj` or remove the stale `DockerComposeProjectPath` from Host.
+The Compose environment pins MongoDB 8.2.6 and MockServer 5.15.0. The stale
+`DockerComposeProjectPath` reference has been removed from Host.
 
 ## Expected quality gates
 
@@ -70,3 +71,13 @@ docker compose build
 ```
 
 All unit, functional and infrastructure tests must pass. The infrastructure suite must verify `201` and at least one business error through Host, while the functional suite must not reference Host.
+
+## Verified result
+
+Validated on 2026-07-27:
+
+- Release build completed with zero warnings and zero errors.
+- 9 unit, 3 functional and 5 infrastructure tests passed.
+- `docker compose config` and `docker compose build` completed successfully.
+- Compose reported MongoDB healthy; Swagger returned `200` and `POST /vehicles`
+  returned `201` with a `Location` header.
