@@ -7,4 +7,5 @@ public sealed record RentalDto(
     Guid PersonId,
     Guid VehicleId,
     DateTimeOffset StartedAt,
-    string Status);
+    string Status,
+    DateTimeOffset? EndedAt = null);

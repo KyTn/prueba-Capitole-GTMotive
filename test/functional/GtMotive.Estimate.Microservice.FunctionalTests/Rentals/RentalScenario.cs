@@ -2,6 +2,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using GtMotive.Estimate.Microservice.ApplicationCore.Rentals.Rent;
+using GtMotive.Estimate.Microservice.ApplicationCore.Rentals.Return;
 using GtMotive.Estimate.Microservice.Domain.Rentals;
 using GtMotive.Estimate.Microservice.Domain.Vehicles;
 using GtMotive.Estimate.Microservice.FunctionalTests.TestDoubles;
@@ -12,12 +13,19 @@ internal sealed class RentalScenario
 {
     public RentalScenario()
     {
+        Clock = new FixedClock(new DateOnly(2026, 7, 27));
         UseCase = new RentVehicleUseCase(
             People,
             Vehicles,
             Rentals,
-            new FixedClock(new DateOnly(2026, 7, 27)),
+            Clock,
             new NullAppLogger<RentVehicleUseCase>());
+        ReturnUseCase = new ReturnVehicleUseCase(
+            People,
+            Vehicles,
+            Rentals,
+            Clock,
+            new NullAppLogger<ReturnVehicleUseCase>());
     }
 
     public InMemoryPersonRegistry People { get; } = new();
@@ -27,6 +35,10 @@ internal sealed class RentalScenario
     public InMemoryRentalRepository Rentals { get; } = new();
 
     public RentVehicleUseCase UseCase { get; }
+
+    public ReturnVehicleUseCase ReturnUseCase { get; }
+
+    public FixedClock Clock { get; }
 
     public PersonId AddPerson()
     {

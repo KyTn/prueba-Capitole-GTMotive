@@ -60,4 +60,33 @@ public sealed class MongoRentalRepository : IRentalRepository
                 : AddActiveRentalResult.VehicleConflict;
         }
     }
+
+    public async Task<Rental> GetActiveByVehicleIdAsync(
+        Guid vehicleId,
+        CancellationToken cancellationToken)
+    {
+        var filter = Builders<RentalDocument>.Filter.And(
+            Builders<RentalDocument>.Filter.Eq(rental => rental.VehicleId, vehicleId),
+            Builders<RentalDocument>.Filter.Eq(rental => rental.Status, RentalStatus.Active.ToString()));
+        var document = await _rentals.Find(filter).SingleOrDefaultAsync(cancellationToken);
+        return document is null ? null : RentalMapper.ToDomain(document);
+    }
+
+    public async Task<CloseActiveRentalResult> TryCloseActiveAsync(
+        Rental rental,
+        CancellationToken cancellationToken)
+    {
+        var filter = Builders<RentalDocument>.Filter.And(
+            Builders<RentalDocument>.Filter.Eq(item => item.Id, rental.Id),
+            Builders<RentalDocument>.Filter.Eq(item => item.PersonId, rental.PersonId.Value),
+            Builders<RentalDocument>.Filter.Eq(item => item.VehicleId, rental.VehicleId),
+            Builders<RentalDocument>.Filter.Eq(item => item.Status, RentalStatus.Active.ToString()));
+        var update = Builders<RentalDocument>.Update
+            .Set(item => item.Status, RentalStatus.Closed.ToString())
+            .Set(item => item.EndedAt, rental.EndedAt.Value.UtcDateTime);
+        var result = await _rentals.UpdateOneAsync(filter, update, cancellationToken: cancellationToken);
+        return result.ModifiedCount == 1
+            ? CloseActiveRentalResult.Closed
+            : CloseActiveRentalResult.Conflict;
+    }
 }

@@ -1,4 +1,4 @@
-# Tasks: Devolver un vehículo
+﻿# Tasks: Devolver un vehÃ­culo
 
 **Input**: Design documents from `/specs/004-devolver-vehiculo/`  
 **Prerequisites**: plan.md, spec.md, research.md, data-model.md, contracts/openapi.yaml, quickstart.md
@@ -17,8 +17,8 @@
 
 **Purpose**: Confirm the existing T3 baseline and establish the T4 contract before changing behavior.
 
-- [ ] T001 Verify the existing rental baseline with `dotnet test test/unit/GtMotive.Estimate.Microservice.UnitTests/GtMotive.Estimate.Microservice.UnitTests.csproj`, `dotnet test test/functional/GtMotive.Estimate.Microservice.FunctionalTests/GtMotive.Estimate.Microservice.FunctionalTests.csproj`, and `dotnet test test/infrastructure/GtMotive.Estimate.Microservice.InfrastructureTests/GtMotive.Estimate.Microservice.InfrastructureTests.csproj`, recording any pre-existing failure in `specs/004-devolver-vehiculo/quickstart.md`
-- [ ] T002 [P] Reconcile the planned `POST /rentals/returns` schemas and response mappings with the existing rental API conventions in `specs/004-devolver-vehiculo/contracts/openapi.yaml`
+- [x] T001 Verify the existing rental baseline with `dotnet test test/unit/GtMotive.Estimate.Microservice.UnitTests/GtMotive.Estimate.Microservice.UnitTests.csproj`, `dotnet test test/functional/GtMotive.Estimate.Microservice.FunctionalTests/GtMotive.Estimate.Microservice.FunctionalTests.csproj`, and `dotnet test test/infrastructure/GtMotive.Estimate.Microservice.InfrastructureTests/GtMotive.Estimate.Microservice.InfrastructureTests.csproj`, recording any pre-existing failure in `specs/004-devolver-vehiculo/quickstart.md`
+- [x] T002 [P] Reconcile the planned `POST /rentals/returns` schemas and response mappings with the existing rental API conventions in `specs/004-devolver-vehiculo/contracts/openapi.yaml`
 
 ---
 
@@ -26,23 +26,23 @@
 
 **Purpose**: Add the shared domain state, application contracts, and persistence semantics required by every return scenario.
 
-**⚠️ CRITICAL**: No user-story implementation starts until this phase is complete.
+**âš ï¸ CRITICAL**: No user-story implementation starts until this phase is complete.
 
-- [ ] T003 Add failing unit tests for `Rental.Return`, `EndedAt` rehydration, repeated closure, and end-before-start rejection in `test/unit/GtMotive.Estimate.Microservice.UnitTests/Rentals/RentalReturnTests.cs`
-- [ ] T004 Implement the `Active` to `Closed` transition, immutable `EndedAt`, temporal validation, and compatible rehydration in `src/GtMotive.Estimate.Microservice.Domain/Rentals/Rental.cs`
-- [ ] T005 [P] Extend the rental transfer representation with nullable `EndedAt` in `src/GtMotive.Estimate.Microservice.ApplicationCore/Rentals/RentalDto.cs`
-- [ ] T006 Define active-rental lookup and typed compare-and-set close results on `IRentalRepository` in `src/GtMotive.Estimate.Microservice.ApplicationCore/Rentals/IRentalRepository.cs`
-- [ ] T007 [P] Add `EndedAt` as an optional UTC field for backward-compatible documents in `src/GtMotive.Estimate.Microservice.Infrastructure/MongoDb/Rentals/RentalDocument.cs`
-- [ ] T008 Update both mapping directions for `EndedAt` and the `Closed` state in `src/GtMotive.Estimate.Microservice.Infrastructure/MongoDb/Rentals/RentalMapper.cs`
-- [ ] T009 Implement active lookup plus atomic close filtered by rental, person, vehicle, and `Status=Active` in `src/GtMotive.Estimate.Microservice.Infrastructure/MongoDb/Rentals/MongoRentalRepository.cs`
-- [ ] T010 Implement thread-safe active lookup and conditional close semantics for functional tests in `test/functional/GtMotive.Estimate.Microservice.FunctionalTests/TestDoubles/InMemoryRentalRepository.cs`
-- [ ] T011 Implement the equivalent thread-safe conditional close and seeding support for Host tests in `test/infrastructure/GtMotive.Estimate.Microservice.InfrastructureTests/Rentals/RentalApiFactory.cs`
+- [x] T003 Add failing unit tests for `Rental.Return`, `EndedAt` rehydration, repeated closure, and end-before-start rejection in `test/unit/GtMotive.Estimate.Microservice.UnitTests/Rentals/RentalReturnTests.cs`
+- [x] T004 Implement the `Active` to `Closed` transition, immutable `EndedAt`, temporal validation, and compatible rehydration in `src/GtMotive.Estimate.Microservice.Domain/Rentals/Rental.cs`
+- [x] T005 [P] Extend the rental transfer representation with nullable `EndedAt` in `src/GtMotive.Estimate.Microservice.ApplicationCore/Rentals/RentalDto.cs`
+- [x] T006 Define active-rental lookup and typed compare-and-set close results on `IRentalRepository` in `src/GtMotive.Estimate.Microservice.ApplicationCore/Rentals/IRentalRepository.cs`
+- [x] T007 [P] Add `EndedAt` as an optional UTC field for backward-compatible documents in `src/GtMotive.Estimate.Microservice.Infrastructure/MongoDb/Rentals/RentalDocument.cs`
+- [x] T008 Update both mapping directions for `EndedAt` and the `Closed` state in `src/GtMotive.Estimate.Microservice.Infrastructure/MongoDb/Rentals/RentalMapper.cs`
+- [x] T009 Implement active lookup plus atomic close filtered by rental, person, vehicle, and `Status=Active` in `src/GtMotive.Estimate.Microservice.Infrastructure/MongoDb/Rentals/MongoRentalRepository.cs`
+- [x] T010 Implement thread-safe active lookup and conditional close semantics for functional tests in `test/functional/GtMotive.Estimate.Microservice.FunctionalTests/TestDoubles/InMemoryRentalRepository.cs`
+- [x] T011 Implement the equivalent thread-safe conditional close and seeding support for Host tests in `test/infrastructure/GtMotive.Estimate.Microservice.InfrastructureTests/Rentals/RentalApiFactory.cs`
 
 **Checkpoint**: The domain and both production/test persistence boundaries can close an active rental exactly once.
 
 ---
 
-## Phase 3: User Story 1 - Devolver un vehículo alquilado (Priority: P1) 🎯 MVP
+## Phase 3: User Story 1 - Devolver un vehÃ­culo alquilado (Priority: P1) ðŸŽ¯ MVP
 
 **Goal**: Close the active rental owned by the requesting person, record the return time, and make both person and vehicle available.
 
@@ -52,23 +52,23 @@
 
 > Write these tests first and confirm that they fail before implementing the story.
 
-- [ ] T012 [P] [US1] Add functional success coverage proving the rental closes and the person and vehicle can be rented again in `test/functional/GtMotive.Estimate.Microservice.FunctionalTests/Rentals/ReturnVehicleUseCaseTests.cs`
-- [ ] T013 [P] [US1] Add Host-level contract coverage for `POST /rentals/returns` returning `200` with `closed` and `endedAt` in `test/infrastructure/GtMotive.Estimate.Microservice.InfrastructureTests/Rentals/ReturnVehicleEndpointTests.cs`
-- [ ] T014 [P] [US1] Define the return command and success/error result types in `src/GtMotive.Estimate.Microservice.ApplicationCore/Rentals/Return/ReturnVehicleCommand.cs` and `src/GtMotive.Estimate.Microservice.ApplicationCore/Rentals/Return/ReturnVehicleResult.cs`
+- [x] T012 [P] [US1] Add functional success coverage proving the rental closes and the person and vehicle can be rented again in `test/functional/GtMotive.Estimate.Microservice.FunctionalTests/Rentals/ReturnVehicleUseCaseTests.cs`
+- [x] T013 [P] [US1] Add Host-level contract coverage for `POST /rentals/returns` returning `200` with `closed` and `endedAt` in `test/infrastructure/GtMotive.Estimate.Microservice.InfrastructureTests/Rentals/ReturnVehicleEndpointTests.cs`
+- [x] T014 [P] [US1] Define the return command and success/error result types in `src/GtMotive.Estimate.Microservice.ApplicationCore/Rentals/Return/ReturnVehicleCommand.cs` and `src/GtMotive.Estimate.Microservice.ApplicationCore/Rentals/Return/ReturnVehicleResult.cs`
 
 ### Implementation for User Story 1
 
-- [ ] T015 [US1] Implement input validation, reference checks, active-rental lookup, domain transition, conditional persistence, cancellation, and structured outcome logging in `src/GtMotive.Estimate.Microservice.ApplicationCore/Rentals/Return/ReturnVehicleUseCase.cs`
-- [ ] T016 [P] [US1] Add return request and closed-rental response transport models in `src/GtMotive.Estimate.Microservice.Api/Rentals/Return/ReturnVehicleRequest.cs` and `src/GtMotive.Estimate.Microservice.Api/Rentals/Return/ReturnVehicleResponse.cs`
-- [ ] T017 [US1] Map successful and expected return outcomes to `200`, `400`, `404`, and `409` Problem Details in `src/GtMotive.Estimate.Microservice.Api/Rentals/Return/ReturnVehiclePresenter.cs`
-- [ ] T018 [US1] Expose `POST /rentals/returns`, propagate the `CancellationToken`, and declare OpenAPI response metadata in `src/GtMotive.Estimate.Microservice.Api/Rentals/Return/RentalReturnsController.cs`
-- [ ] T019 [US1] Register `ReturnVehicleUseCase` using the existing composition pattern in `src/GtMotive.Estimate.Microservice.ApplicationCore/ApplicationConfiguration.cs`
+- [x] T015 [US1] Implement input validation, reference checks, active-rental lookup, domain transition, conditional persistence, cancellation, and structured outcome logging in `src/GtMotive.Estimate.Microservice.ApplicationCore/Rentals/Return/ReturnVehicleUseCase.cs`
+- [x] T016 [P] [US1] Add return request and closed-rental response transport models in `src/GtMotive.Estimate.Microservice.Api/Rentals/Return/ReturnVehicleRequest.cs` and `src/GtMotive.Estimate.Microservice.Api/Rentals/Return/ReturnVehicleResponse.cs`
+- [x] T017 [US1] Map successful and expected return outcomes to `200`, `400`, `404`, and `409` Problem Details in `src/GtMotive.Estimate.Microservice.Api/Rentals/Return/ReturnVehiclePresenter.cs`
+- [x] T018 [US1] Expose `POST /rentals/returns`, propagate the `CancellationToken`, and declare OpenAPI response metadata in `src/GtMotive.Estimate.Microservice.Api/Rentals/Return/RentalReturnsController.cs`
+- [x] T019 [US1] Register `ReturnVehicleUseCase` using the existing composition pattern in `src/GtMotive.Estimate.Microservice.ApplicationCore/ApplicationConfiguration.cs`
 
 **Checkpoint**: US1 is usable end to end and independently proves a valid return releases the active assignment.
 
 ---
 
-## Phase 4: User Story 2 - Rechazar un vehículo no alquilado (Priority: P1)
+## Phase 4: User Story 2 - Rechazar un vehÃ­culo no alquilado (Priority: P1)
 
 **Goal**: Reject a vehicle with no active rental, a repeated return, and concurrent duplicate returns without changing history.
 
@@ -78,19 +78,19 @@
 
 > Write these tests first and confirm that they fail before completing the conflict behavior.
 
-- [ ] T020 [P] [US2] Add functional cases for never-rented vehicle, repeated return, and two concurrent returns with exactly one success in `test/functional/GtMotive.Estimate.Microservice.FunctionalTests/Rentals/ReturnVehicleConflictTests.cs`
-- [ ] T021 [P] [US2] Add Host-level `409` coverage for non-rented, repeated, and concurrent return requests in `test/infrastructure/GtMotive.Estimate.Microservice.InfrastructureTests/Rentals/ReturnVehicleConflictEndpointTests.cs`
+- [x] T020 [P] [US2] Add functional cases for never-rented vehicle, repeated return, and two concurrent returns with exactly one success in `test/functional/GtMotive.Estimate.Microservice.FunctionalTests/Rentals/ReturnVehicleConflictTests.cs`
+- [x] T021 [P] [US2] Add Host-level `409` coverage for non-rented, repeated, and concurrent return requests in `test/infrastructure/GtMotive.Estimate.Microservice.InfrastructureTests/Rentals/ReturnVehicleConflictEndpointTests.cs`
 
 ### Implementation for User Story 2
 
-- [ ] T022 [US2] Complete vehicle-not-rented, already-returned, and lost-race result handling while preserving the first `EndedAt` in `src/GtMotive.Estimate.Microservice.ApplicationCore/Rentals/Return/ReturnVehicleUseCase.cs`
-- [ ] T023 [US2] Map all state and concurrency conflicts to stable `409` problem codes in `src/GtMotive.Estimate.Microservice.Api/Rentals/Return/ReturnVehiclePresenter.cs`
+- [x] T022 [US2] Complete vehicle-not-rented, already-returned, and lost-race result handling while preserving the first `EndedAt` in `src/GtMotive.Estimate.Microservice.ApplicationCore/Rentals/Return/ReturnVehicleUseCase.cs`
+- [x] T023 [US2] Map all state and concurrency conflicts to stable `409` problem codes in `src/GtMotive.Estimate.Microservice.Api/Rentals/Return/ReturnVehiclePresenter.cs`
 
 **Checkpoint**: US2 independently proves that only an active rental can be returned and only one concurrent request can close it.
 
 ---
 
-## Phase 5: User Story 3 - Proteger la asignación de otra persona (Priority: P2)
+## Phase 5: User Story 3 - Proteger la asignaciÃ³n de otra persona (Priority: P2)
 
 **Goal**: Reject a return by a non-owner and distinguish invalid or missing person/vehicle references without changing the active rental.
 
@@ -100,13 +100,13 @@
 
 > Write these tests first and confirm that they fail before completing validation and ownership behavior.
 
-- [ ] T024 [P] [US3] Add functional coverage for wrong owner, unknown person, unknown vehicle, and state preservation in `test/functional/GtMotive.Estimate.Microservice.FunctionalTests/Rentals/ReturnVehicleOwnershipTests.cs`
-- [ ] T025 [P] [US3] Add Host-level `400`, `404`, and ownership `409` contract coverage in `test/infrastructure/GtMotive.Estimate.Microservice.InfrastructureTests/Rentals/ReturnVehicleValidationEndpointTests.cs`
+- [x] T024 [P] [US3] Add functional coverage for wrong owner, unknown person, unknown vehicle, and state preservation in `test/functional/GtMotive.Estimate.Microservice.FunctionalTests/Rentals/ReturnVehicleOwnershipTests.cs`
+- [x] T025 [P] [US3] Add Host-level `400`, `404`, and ownership `409` contract coverage in `test/infrastructure/GtMotive.Estimate.Microservice.InfrastructureTests/Rentals/ReturnVehicleValidationEndpointTests.cs`
 
 ### Implementation for User Story 3
 
-- [ ] T026 [US3] Complete ordered person/vehicle existence and ownership validation with stable result codes in `src/GtMotive.Estimate.Microservice.ApplicationCore/Rentals/Return/ReturnVehicleUseCase.cs`
-- [ ] T027 [US3] Complete validation, not-found, and ownership mappings without exposing internal details in `src/GtMotive.Estimate.Microservice.Api/Rentals/Return/ReturnVehiclePresenter.cs`
+- [x] T026 [US3] Complete ordered person/vehicle existence and ownership validation with stable result codes in `src/GtMotive.Estimate.Microservice.ApplicationCore/Rentals/Return/ReturnVehicleUseCase.cs`
+- [x] T027 [US3] Complete validation, not-found, and ownership mappings without exposing internal details in `src/GtMotive.Estimate.Microservice.Api/Rentals/Return/ReturnVehiclePresenter.cs`
 
 **Checkpoint**: All three stories work independently and invalid callers cannot alter another person's rental.
 
@@ -116,12 +116,12 @@
 
 **Purpose**: Confirm compatibility, observability, documentation, and reproducible delivery across all stories.
 
-- [ ] T028 [P] Add unit coverage for return result factories and stable error codes in `test/unit/GtMotive.Estimate.Microservice.UnitTests/Rentals/ReturnVehicleResultTests.cs`
-- [ ] T029 [P] Update the repository-facing API documentation and return examples in `README.md`
-- [ ] T030 Verify structured logs contain outcome plus rental/vehicle identifiers but no sensitive person data in `src/GtMotive.Estimate.Microservice.ApplicationCore/Rentals/Return/ReturnVehicleUseCase.cs`
-- [ ] T031 Run restore, Release build, analyzers, and all three test projects using the commands in `specs/004-devolver-vehiculo/quickstart.md`
-- [ ] T032 Validate `docker compose config`, local startup, container startup, `POST /rentals/returns`, and a subsequent successful re-rental using `specs/004-devolver-vehiculo/quickstart.md`
-- [ ] T033 Verify `.dockerignore`, `Dockerfile`, `compose.yaml`, Visual Studio Docker profile, declared ports/configuration, official .NET 9 runtime images, and absence of committed or layered secrets, documenting any issue in `specs/004-devolver-vehiculo/quickstart.md`
+- [x] T028 [P] Add unit coverage for return result factories and stable error codes in `test/unit/GtMotive.Estimate.Microservice.UnitTests/Rentals/ReturnVehicleResultTests.cs`
+- [x] T029 [P] Update the repository-facing API documentation and return examples in `README.md`
+- [x] T030 Verify structured logs contain outcome plus rental/vehicle identifiers but no sensitive person data in `src/GtMotive.Estimate.Microservice.ApplicationCore/Rentals/Return/ReturnVehicleUseCase.cs`
+- [x] T031 Run restore, Release build, analyzers, and all three test projects using the commands in `specs/004-devolver-vehiculo/quickstart.md`
+- [x] T032 Validate `docker compose config`, local startup, container startup, `POST /rentals/returns`, and a subsequent successful re-rental using `specs/004-devolver-vehiculo/quickstart.md`
+- [x] T033 Verify `.dockerignore`, `Dockerfile`, `compose.yaml`, Visual Studio Docker profile, declared ports/configuration, official .NET 9 runtime images, and absence of committed or layered secrets, documenting any issue in `specs/004-devolver-vehiculo/quickstart.md`
 
 ---
 
@@ -140,11 +140,11 @@
 
 ```text
 Setup
-  └── Foundational
-        └── US1: valid return (MVP)
-              ├── US2: no active rental / duplicate / concurrency
-              └── US3: ownership / invalid / not found
-                    └── Polish (after US2 and US3)
+  â””â”€â”€ Foundational
+        â””â”€â”€ US1: valid return (MVP)
+              â”œâ”€â”€ US2: no active rental / duplicate / concurrency
+              â””â”€â”€ US3: ownership / invalid / not found
+                    â””â”€â”€ Polish (after US2 and US3)
 ```
 
 ### Within Each User Story

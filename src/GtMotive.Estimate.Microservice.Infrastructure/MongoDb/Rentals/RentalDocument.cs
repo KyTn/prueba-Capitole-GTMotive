@@ -19,4 +19,7 @@ public sealed class RentalDocument
     public DateTime StartedAt { get; set; }
 
     public string Status { get; set; }
+
+    [BsonIgnoreIfNull]
+    public DateTime? EndedAt { get; set; }
 }

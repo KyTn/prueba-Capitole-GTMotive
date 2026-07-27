@@ -54,6 +54,13 @@ internal sealed class RentalApiFactory : WebApplicationFactory<Program>
         return vehicle;
     }
 
+    public async Task<Rental> AddActiveRentalAsync(PersonId personId, Vehicle vehicle)
+    {
+        var rental = Rental.Create(Guid.NewGuid(), personId, vehicle.Id, Clock.UtcNow);
+        await Rentals.TryAddActiveAsync(rental, CancellationToken.None);
+        return rental;
+    }
+
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
         builder.UseEnvironment("Development");
@@ -156,4 +163,50 @@ internal sealed class HostRentalRepository : IRentalRepository
             return Task.FromResult(AddActiveRentalResult.Created);
         }
     }
+
+    public Task<Rental> GetActiveByVehicleIdAsync(
+        Guid vehicleId,
+        CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+        lock (_sync)
+        {
+            var rental = _rentals.SingleOrDefault(
+                item => item.Status == RentalStatus.Active && item.VehicleId == vehicleId);
+            return Task.FromResult(Clone(rental));
+        }
+    }
+
+    public Task<CloseActiveRentalResult> TryCloseActiveAsync(
+        Rental rental,
+        CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+        lock (_sync)
+        {
+            var index = _rentals.FindIndex(item =>
+                item.Id == rental.Id &&
+                item.PersonId == rental.PersonId &&
+                item.VehicleId == rental.VehicleId &&
+                item.Status == RentalStatus.Active);
+            if (index < 0)
+            {
+                return Task.FromResult(CloseActiveRentalResult.Conflict);
+            }
+
+            _rentals[index] = Clone(rental);
+            return Task.FromResult(CloseActiveRentalResult.Closed);
+        }
+    }
+
+    private static Rental Clone(Rental rental) =>
+        rental is null
+            ? null
+            : Rental.Rehydrate(
+                rental.Id,
+                rental.PersonId,
+                rental.VehicleId,
+                rental.StartedAt,
+                rental.Status,
+                rental.EndedAt);
 }
