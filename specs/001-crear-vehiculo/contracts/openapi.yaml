@@ -1,0 +1,125 @@
+openapi: 3.0.3
+info:
+  title: GT Motive Fleet API
+  version: 1.0.0
+paths:
+  /vehicles:
+    post:
+      summary: Add a vehicle to the fleet
+      operationId: createVehicle
+      tags:
+        - Vehicles
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateVehicleRequest'
+      responses:
+        '201':
+          description: Vehicle created
+          headers:
+            Location:
+              description: URI of the created vehicle
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Vehicle'
+        '400':
+          description: Missing or invalid input, including a future manufacture date
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '409':
+          description: A vehicle with the normalized registration number already exists
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '422':
+          description: Manufacture date is older than the five-year limit
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '500':
+          description: Unexpected failure without internal details
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+components:
+  schemas:
+    CreateVehicleRequest:
+      type: object
+      additionalProperties: false
+      required:
+        - registrationNumber
+        - brand
+        - model
+        - manufactureDate
+      properties:
+        registrationNumber:
+          type: string
+          minLength: 1
+          example: 1234ABC
+        brand:
+          type: string
+          minLength: 1
+          example: Toyota
+        model:
+          type: string
+          minLength: 1
+          example: Corolla
+        manufactureDate:
+          type: string
+          format: date
+          example: '2024-06-15'
+    Vehicle:
+      type: object
+      required:
+        - id
+        - registrationNumber
+        - brand
+        - model
+        - manufactureDate
+      properties:
+        id:
+          type: string
+          format: uuid
+        registrationNumber:
+          type: string
+        brand:
+          type: string
+        model:
+          type: string
+        manufactureDate:
+          type: string
+          format: date
+    Problem:
+      type: object
+      required:
+        - status
+        - title
+        - code
+      properties:
+        type:
+          type: string
+          format: uri
+        title:
+          type: string
+        status:
+          type: integer
+        detail:
+          type: string
+        code:
+          type: string
+          enum:
+            - invalid_vehicle
+            - future_manufacture_date
+            - vehicle_too_old
+            - vehicle_already_exists
+            - unexpected_error
