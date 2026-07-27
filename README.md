@@ -42,5 +42,48 @@ dotnet test src/microservice.sln --configuration Release --no-build
 docker compose config
 ```
 
+## Ejecución fuera del contenedor
+
+El Host local escucha en `http://localhost:8080`. MongoDB y MockServer pueden ejecutarse
+como dependencias aisladas:
+
+```powershell
+docker compose up -d mongodb mockserver
+dotnet run --project src/GtMotive.Estimate.Microservice.Host/GtMotive.Estimate.Microservice.Host.csproj
+Invoke-WebRequest http://localhost:8080/health/live
+```
+
+Las variables locales relevantes son:
+
+- `MongoDb__ConnectionString` (por defecto `mongodb://localhost:27018`).
+- `MongoDb__MongoDbDatabaseName`.
+- `MongoDb__VehiclesCollectionName` y `MongoDb__RentalsCollectionName`.
+- `PersonRegistry__BaseUrl` (por defecto `http://localhost:1080`).
+- `ASPNETCORE_URLS` o el puerto `8080` definido en `launchSettings.json`.
+
+## Ejecución en contenedores
+
+Copiar `.env.example` a `.env` permite cambiar puertos, nombres de colecciones, nivel de
+log y nombre del volumen sin editar Compose:
+
+```powershell
+Copy-Item .env.example .env
+docker compose up --build -d
+docker compose ps
+Invoke-WebRequest http://localhost:8080/health/live
+Invoke-WebRequest http://localhost:8080/vehicles
+docker compose down
+```
+
+- La aplicación publica `${APP_PORT:-8080}` y escucha internamente en `8080`.
+- MockServer publica `${MOCKSERVER_PORT:-1080}` y carga
+  `docker/mockserver/expectations.json` mediante un volumen de solo lectura.
+- MongoDB usa el volumen persistente `${MONGODB_VOLUME_NAME}` en `/data/db` y publica
+  `${MONGODB_PORT:-27018}` para que el Host local use `mongodb://localhost:27018`.
+- La aplicación espera a MongoDB saludable y expone `/health/live`; Compose y la imagen
+  usan esa ruta para comprobar el proceso.
+- `docker compose down` conserva los datos. Para eliminar también el volumen:
+  `docker compose down --volumes`.
+
 Consulta la guía actual en
 [`specs/005-usecase-mediatr-integration/quickstart.md`](specs/005-usecase-mediatr-integration/quickstart.md).

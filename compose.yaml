@@ -9,21 +9,29 @@ services:
     container_name: prueba-capitole-gtmotive-app
     restart: unless-stopped
     ports:
-      - "8080:8080"
+      - "${APP_PORT:-8080}:8080"
     environment:
-      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT:-Development}
       ASPNETCORE_URLS: http://+:8080
       MongoDb__ConnectionString: mongodb://mongodb:27017
-      MongoDb__MongoDbDatabaseName: prueba-capitole-gtmotive
-      MongoDb__VehiclesCollectionName: vehicles
-      MongoDb__RentalsCollectionName: rentals
+      MongoDb__MongoDbDatabaseName: ${MONGODB_DATABASE:-prueba-capitole-gtmotive}
+      MongoDb__VehiclesCollectionName: ${MONGODB_VEHICLES_COLLECTION:-vehicles}
+      MongoDb__RentalsCollectionName: ${MONGODB_RENTALS_COLLECTION:-rentals}
       PersonRegistry__BaseUrl: http://mockserver:1080
-      MockServer__BaseUrl: http://mockserver:1080
+      PathBase: ${APP_PATH_BASE:-/}
+      Swagger__AuthFlow: ${SWAGGER_AUTH_FLOW:-AuthorizationCode}
+      Swagger__EnableTryIt: ${SWAGGER_ENABLE_TRY_IT:-Yes}
     depends_on:
       mongodb:
         condition: service_healthy
       mockserver:
         condition: service_started
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "--silent", "http://localhost:8080/health/live"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
     networks:
       - prueba-capitole-gtmotive
 
@@ -31,6 +39,8 @@ services:
     image: mongo:8.2.6
     container_name: prueba-capitole-gtmotive-mongodb
     restart: unless-stopped
+    ports:
+      - "${MONGODB_PORT:-27018}:27017"
     volumes:
       - mongodb-data:/data/db
     healthcheck:
@@ -47,15 +57,18 @@ services:
     container_name: prueba-capitole-gtmotive-mockserver
     restart: unless-stopped
     ports:
-      - "1080:1080"
+      - "${MOCKSERVER_PORT:-1080}:1080"
     environment:
-      MOCKSERVER_LOG_LEVEL: INFO
+      MOCKSERVER_LOG_LEVEL: ${MOCKSERVER_LOG_LEVEL:-INFO}
+      MOCKSERVER_INITIALIZATION_JSON_PATH: /config/expectations.json
+    volumes:
+      - ./docker/mockserver:/config:ro
     networks:
       - prueba-capitole-gtmotive
 
 volumes:
   mongodb-data:
-    name: prueba-capitole-gtmotive-mongodb-data
+    name: ${MONGODB_VOLUME_NAME:-prueba-capitole-gtmotive-mongodb-data}
 
 networks:
   prueba-capitole-gtmotive:

@@ -4,19 +4,25 @@
       "commandName": "Project",
       "launchBrowser": true,
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "MongoDb__ConnectionString": "mongodb://localhost:27018",
+        "MongoDb__MongoDbDatabaseName": "prueba-capitole-gtmotive",
+        "PersonRegistry__BaseUrl": "http://localhost:1080"
       },
-      "applicationUrl": "https://localhost:59869;http://localhost:59870"
+      "applicationUrl": "http://localhost:8080"
     },
     "Docker": {
       "commandName": "Docker",
       "launchBrowser": true,
       "launchUrl": "swagger",
-      "publishAllPorts": true,
+      "publishAllPorts": false,
       "useSSL": false,
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
-        "ASPNETCORE_HTTP_PORTS": "8080"
+        "ASPNETCORE_HTTP_PORTS": "8080",
+        "MongoDb__ConnectionString": "mongodb://host.docker.internal:27017",
+        "MongoDb__MongoDbDatabaseName": "prueba-capitole-gtmotive",
+        "PersonRegistry__BaseUrl": "http://host.docker.internal:1080"
       }
     }
   }
