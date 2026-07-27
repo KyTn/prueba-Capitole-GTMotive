@@ -1,5 +1,16 @@
 # Prueba técnica Capitole · GT Motive
 
+> **Aviso de propiedad intelectual**
+>
+> Este repositorio se ha creado exclusivamente como prueba técnica para Capitole.
+> Salvo los componentes de terceros y los derechos que pudieran haberse cedido
+> expresamente por contrato, el código y la documentación originales contenidos en
+> él son propiedad de su autor. No se autoriza su copia, reproducción, modificación,
+> distribución, publicación ni explotación, total o parcial, sin consentimiento
+> previo y por escrito del titular de los derechos. El titular se reserva el
+> ejercicio de las acciones legales que correspondan frente a cualquier uso no
+> autorizado.
+
 Microservicio REST desarrollado con .NET 9 para gestionar una flota de vehículos y
 sus alquileres. La API permite crear y consultar vehículos, alquilarlos y registrar
 su devolución. Los endpoints de negocio están protegidos mediante JWT y permisos.
