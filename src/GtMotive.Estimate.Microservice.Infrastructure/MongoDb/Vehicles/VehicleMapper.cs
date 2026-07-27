@@ -13,4 +13,12 @@ internal static class VehicleMapper
             Model = vehicle.Model,
             ManufactureDate = vehicle.ManufactureDate.ToDateTime(System.TimeOnly.MinValue),
         };
+
+    public static Vehicle ToDomain(VehicleDocument document) =>
+        Vehicle.Rehydrate(
+            document.Id,
+            document.RegistrationNumber,
+            document.Brand,
+            document.Model,
+            System.DateOnly.FromDateTime(document.ManufactureDate));
 }

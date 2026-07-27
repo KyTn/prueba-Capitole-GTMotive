@@ -66,6 +66,26 @@ public sealed class Vehicle
             manufactureDate);
     }
 
+    public static Vehicle Rehydrate(
+        Guid id,
+        string registrationNumber,
+        string brand,
+        string model,
+        DateOnly manufactureDate)
+    {
+        if (id == Guid.Empty)
+        {
+            throw new VehicleValidationException(VehicleErrorCodes.InvalidVehicle, "Vehicle id is required.");
+        }
+
+        return new Vehicle(
+            id,
+            new RegistrationNumber(registrationNumber),
+            RequiredText(brand, "Brand"),
+            RequiredText(model, "Model"),
+            manufactureDate);
+    }
+
     private static string RequiredText(string value, string field)
     {
         if (string.IsNullOrWhiteSpace(value))

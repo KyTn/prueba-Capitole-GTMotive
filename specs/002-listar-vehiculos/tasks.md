@@ -17,7 +17,7 @@
 
 **Purpose**: Preparar el proyecto de pruebas aisladas para ejercitar ApplicationCore sin añadir paquetes ni proyectos.
 
-- [ ] T001 Añadir la referencia a `src/GtMotive.Estimate.Microservice.ApplicationCore/GtMotive.Estimate.Microservice.ApplicationCore.csproj` en `test/unit/GtMotive.Estimate.Microservice.UnitTests/GtMotive.Estimate.Microservice.UnitTests.csproj`
+- [X] T001 Añadir la referencia a `src/GtMotive.Estimate.Microservice.ApplicationCore/GtMotive.Estimate.Microservice.ApplicationCore.csproj` en `test/unit/GtMotive.Estimate.Microservice.UnitTests/GtMotive.Estimate.Microservice.UnitTests.csproj`
 
 ---
 
@@ -27,12 +27,12 @@
 
 **CRITICAL**: Ninguna historia puede implementarse hasta completar esta fase.
 
-- [ ] T002 Mover `VehicleDto` al espacio compartido en `src/GtMotive.Estimate.Microservice.ApplicationCore/Vehicles/VehicleDto.cs` y actualizar su uso en `src/GtMotive.Estimate.Microservice.ApplicationCore/Vehicles/Create/CreateVehicleUseCase.cs`
-- [ ] T003 Ampliar `IVehicleRepository` con `GetAllAsync(CancellationToken)` materializado y de solo lectura en `src/GtMotive.Estimate.Microservice.ApplicationCore/Vehicles/IVehicleRepository.cs`
-- [ ] T004 Añadir una vía de rehidratación que preserve las invariantes ya validadas de vehículos persistidos en `src/GtMotive.Estimate.Microservice.Domain/Vehicles/Vehicle.cs`
-- [ ] T005 Añadir el mapeo inverso completo `VehicleDocument` a `Vehicle` en `src/GtMotive.Estimate.Microservice.Infrastructure/MongoDb/Vehicles/VehicleMapper.cs`
-- [ ] T006 Actualizar el doble funcional para implementar `GetAllAsync` sin modificar el estado en `test/functional/GtMotive.Estimate.Microservice.FunctionalTests/TestDoubles/InMemoryVehicleRepository.cs`
-- [ ] T007 Actualizar el repositorio controlado del Host para implementar `GetAllAsync` en `test/infrastructure/GtMotive.Estimate.Microservice.InfrastructureTests/Vehicles/VehicleApiFactory.cs`
+- [X] T002 Mover `VehicleDto` al espacio compartido en `src/GtMotive.Estimate.Microservice.ApplicationCore/Vehicles/VehicleDto.cs` y actualizar su uso en `src/GtMotive.Estimate.Microservice.ApplicationCore/Vehicles/Create/CreateVehicleUseCase.cs`
+- [X] T003 Ampliar `IVehicleRepository` con `GetAllAsync(CancellationToken)` materializado y de solo lectura en `src/GtMotive.Estimate.Microservice.ApplicationCore/Vehicles/IVehicleRepository.cs`
+- [X] T004 Añadir una vía de rehidratación que preserve las invariantes ya validadas de vehículos persistidos en `src/GtMotive.Estimate.Microservice.Domain/Vehicles/Vehicle.cs`
+- [X] T005 Añadir el mapeo inverso completo `VehicleDocument` a `Vehicle` en `src/GtMotive.Estimate.Microservice.Infrastructure/MongoDb/Vehicles/VehicleMapper.cs`
+- [X] T006 Actualizar el doble funcional para implementar `GetAllAsync` sin modificar el estado en `test/functional/GtMotive.Estimate.Microservice.FunctionalTests/TestDoubles/InMemoryVehicleRepository.cs`
+- [X] T007 Actualizar el repositorio controlado del Host para implementar `GetAllAsync` en `test/infrastructure/GtMotive.Estimate.Microservice.InfrastructureTests/Vehicles/VehicleApiFactory.cs`
 
 **Checkpoint**: El contrato de lectura compila en producción y en todos los dobles de prueba.
 
@@ -48,19 +48,19 @@
 
 > Escribir primero estas pruebas y confirmar que fallan antes de implementar la historia.
 
-- [ ] T008 [P] [US1] Crear la prueba unitaria aislada del método de listado con un stub determinista y propagación de cancelación en `test/unit/GtMotive.Estimate.Microservice.UnitTests/Vehicles/ListVehiclesUseCaseTests.cs`
-- [ ] T009 [P] [US1] Crear la prueba funcional sin Host para listado completo, ausencia de duplicados, estado inalterado y fallo de lectura sin resultado parcial en `test/functional/GtMotive.Estimate.Microservice.FunctionalTests/Vehicles/ListVehiclesUseCaseTests.cs`
-- [ ] T010 [P] [US1] Crear la prueba de infraestructura de `GET /vehicles` para una flota poblada, verificando `200`, JSON y campos obligatorios a través de Host en `test/infrastructure/GtMotive.Estimate.Microservice.InfrastructureTests/Vehicles/ListVehiclesEndpointTests.cs`
+- [X] T008 [P] [US1] Crear la prueba unitaria aislada del método de listado con un stub determinista y propagación de cancelación en `test/unit/GtMotive.Estimate.Microservice.UnitTests/Vehicles/ListVehiclesUseCaseTests.cs`
+- [X] T009 [P] [US1] Crear la prueba funcional sin Host para listado completo, ausencia de duplicados, estado inalterado y fallo de lectura sin resultado parcial en `test/functional/GtMotive.Estimate.Microservice.FunctionalTests/Vehicles/ListVehiclesUseCaseTests.cs`
+- [X] T010 [P] [US1] Crear la prueba de infraestructura de `GET /vehicles` para una flota poblada, verificando `200`, JSON y campos obligatorios a través de Host en `test/infrastructure/GtMotive.Estimate.Microservice.InfrastructureTests/Vehicles/ListVehiclesEndpointTests.cs`
 
 ### Implementation for User Story 1
 
-- [ ] T011 [P] [US1] Crear el resultado inmutable y no nulo `ListVehiclesResult` en `src/GtMotive.Estimate.Microservice.ApplicationCore/Vehicles/List/ListVehiclesResult.cs`
-- [ ] T012 [US1] Implementar `ListVehiclesUseCase` con proyección completa a `VehicleDto`, `CancellationToken` y log agregado sin datos de vehículo en `src/GtMotive.Estimate.Microservice.ApplicationCore/Vehicles/List/ListVehiclesUseCase.cs`
-- [ ] T013 [P] [US1] Implementar `GetAllAsync` con materialización completa o excepción en `src/GtMotive.Estimate.Microservice.Infrastructure/MongoDb/Vehicles/MongoVehicleRepository.cs`
-- [ ] T014 [P] [US1] Crear el contrato de respuesta HTTP de vehículo reutilizando los cinco campos públicos en `src/GtMotive.Estimate.Microservice.Api/Vehicles/List/ListVehiclesResponse.cs`
-- [ ] T015 [US1] Crear el presenter que convierte el resultado completo en una respuesta `200` sin streaming en `src/GtMotive.Estimate.Microservice.Api/Vehicles/List/ListVehiclesPresenter.cs`
-- [ ] T016 [US1] Implementar `GET /vehicles`, documentación de respuestas y propagación de cancelación en `src/GtMotive.Estimate.Microservice.Api/Vehicles/List/ListVehiclesController.cs`
-- [ ] T017 [US1] Registrar `ListVehiclesUseCase` conservando el registro de creación existente en `src/GtMotive.Estimate.Microservice.ApplicationCore/ApplicationConfiguration.cs`
+- [X] T011 [P] [US1] Crear el resultado inmutable y no nulo `ListVehiclesResult` en `src/GtMotive.Estimate.Microservice.ApplicationCore/Vehicles/List/ListVehiclesResult.cs`
+- [X] T012 [US1] Implementar `ListVehiclesUseCase` con proyección completa a `VehicleDto`, `CancellationToken` y log agregado sin datos de vehículo en `src/GtMotive.Estimate.Microservice.ApplicationCore/Vehicles/List/ListVehiclesUseCase.cs`
+- [X] T013 [P] [US1] Implementar `GetAllAsync` con materialización completa o excepción en `src/GtMotive.Estimate.Microservice.Infrastructure/MongoDb/Vehicles/MongoVehicleRepository.cs`
+- [X] T014 [P] [US1] Crear el contrato de respuesta HTTP de vehículo reutilizando los cinco campos públicos en `src/GtMotive.Estimate.Microservice.Api/Vehicles/List/ListVehiclesResponse.cs`
+- [X] T015 [US1] Crear el presenter que convierte el resultado completo en una respuesta `200` sin streaming en `src/GtMotive.Estimate.Microservice.Api/Vehicles/List/ListVehiclesPresenter.cs`
+- [X] T016 [US1] Implementar `GET /vehicles`, documentación de respuestas y propagación de cancelación en `src/GtMotive.Estimate.Microservice.Api/Vehicles/List/ListVehiclesController.cs`
+- [X] T017 [US1] Registrar `ListVehiclesUseCase` conservando el registro de creación existente en `src/GtMotive.Estimate.Microservice.ApplicationCore/ApplicationConfiguration.cs`
 
 **Checkpoint**: US1 devuelve una flota poblada completa mediante el caso de uso aislado, la integración sin Host y HTTP/Host.
 
@@ -76,13 +76,13 @@
 
 > Escribir primero estas pruebas y confirmar que fallan si la colección vacía no se conserva en cada frontera.
 
-- [ ] T018 [P] [US2] Crear la prueba unitaria de resultado vacío no nulo en `test/unit/GtMotive.Estimate.Microservice.UnitTests/Vehicles/ListVehiclesEmptyFleetTests.cs`
-- [ ] T019 [P] [US2] Crear la prueba funcional sin Host de flota vacía y repositorio inalterado en `test/functional/GtMotive.Estimate.Microservice.FunctionalTests/Vehicles/ListVehiclesEmptyFleetTests.cs`
-- [ ] T020 [P] [US2] Crear la prueba de infraestructura que exige `200 application/json` con `[]` a través de Host en `test/infrastructure/GtMotive.Estimate.Microservice.InfrastructureTests/Vehicles/ListVehiclesEmptyFleetEndpointTests.cs`
+- [X] T018 [P] [US2] Crear la prueba unitaria de resultado vacío no nulo en `test/unit/GtMotive.Estimate.Microservice.UnitTests/Vehicles/ListVehiclesEmptyFleetTests.cs`
+- [X] T019 [P] [US2] Crear la prueba funcional sin Host de flota vacía y repositorio inalterado en `test/functional/GtMotive.Estimate.Microservice.FunctionalTests/Vehicles/ListVehiclesEmptyFleetTests.cs`
+- [X] T020 [P] [US2] Crear la prueba de infraestructura que exige `200 application/json` con `[]` a través de Host en `test/infrastructure/GtMotive.Estimate.Microservice.InfrastructureTests/Vehicles/ListVehiclesEmptyFleetEndpointTests.cs`
 
 ### Implementation for User Story 2
 
-- [ ] T021 [US2] Garantizar que el resultado, presenter y serialización preservan una colección vacía no nula en `src/GtMotive.Estimate.Microservice.ApplicationCore/Vehicles/List/ListVehiclesResult.cs` y `src/GtMotive.Estimate.Microservice.Api/Vehicles/List/ListVehiclesPresenter.cs`
+- [X] T021 [US2] Garantizar que el resultado, presenter y serialización preservan una colección vacía no nula en `src/GtMotive.Estimate.Microservice.ApplicationCore/Vehicles/List/ListVehiclesResult.cs` y `src/GtMotive.Estimate.Microservice.Api/Vehicles/List/ListVehiclesPresenter.cs`
 
 **Checkpoint**: US2 distingue de forma verificable una flota vacía de un fallo en los tres niveles de prueba.
 
@@ -92,11 +92,11 @@
 
 **Purpose**: Cerrar documentación, compatibilidad, calidad y reproducibilidad para ambas historias.
 
-- [ ] T022 [P] Actualizar la documentación Swagger del recurso compartido GET/POST y comprobarla contra `specs/002-listar-vehiculos/contracts/openapi.yaml` en `src/GtMotive.Estimate.Microservice.Api/Vehicles/List/ListVehiclesController.cs`
-- [ ] T023 [P] Revisar el quickstart con las rutas y resultados finales de las suites en `specs/002-listar-vehiculos/quickstart.md`
-- [ ] T024 Ejecutar restore, build Release, analizadores y las suites unit, functional e infrastructure definidas en `specs/002-listar-vehiculos/quickstart.md`
-- [ ] T025 Validar `docker compose config`, build, arranque y `GET /vehicles` contenedorizado, documentando la evidencia en `specs/002-listar-vehiculos/quickstart.md`
-- [ ] T026 Revisar compatibilidad de `POST /vehicles`, dirección de dependencias, logs sin datos sensibles y ausencia de secretos usando `specs/002-listar-vehiculos/plan.md` como checklist técnico
+- [X] T022 [P] Actualizar la documentación Swagger del recurso compartido GET/POST y comprobarla contra `specs/002-listar-vehiculos/contracts/openapi.yaml` en `src/GtMotive.Estimate.Microservice.Api/Vehicles/List/ListVehiclesController.cs`
+- [X] T023 [P] Revisar el quickstart con las rutas y resultados finales de las suites en `specs/002-listar-vehiculos/quickstart.md`
+- [X] T024 Ejecutar restore, build Release, analizadores y las suites unit, functional e infrastructure definidas en `specs/002-listar-vehiculos/quickstart.md`
+- [X] T025 Validar `docker compose config`, build, arranque y `GET /vehicles` contenedorizado, documentando la evidencia en `specs/002-listar-vehiculos/quickstart.md`
+- [X] T026 Revisar compatibilidad de `POST /vehicles`, dirección de dependencias, logs sin datos sensibles y ausencia de secretos usando `specs/002-listar-vehiculos/plan.md` como checklist técnico
 
 ---
 

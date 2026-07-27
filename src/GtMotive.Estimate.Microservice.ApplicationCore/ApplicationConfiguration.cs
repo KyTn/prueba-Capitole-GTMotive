@@ -2,6 +2,7 @@
 using System.Diagnostics.CodeAnalysis;
 using Microsoft.Extensions.DependencyInjection;
 using GtMotive.Estimate.Microservice.ApplicationCore.Vehicles.Create;
+using GtMotive.Estimate.Microservice.ApplicationCore.Vehicles.List;
 
 [assembly: CLSCompliant(false)]
 
@@ -21,6 +22,7 @@ namespace GtMotive.Estimate.Microservice.ApplicationCore
         public static IServiceCollection AddUseCases(this IServiceCollection services)
         {
             services.AddScoped<CreateVehicleUseCase>();
+            services.AddScoped<ListVehiclesUseCase>();
             return services;
         }
     }

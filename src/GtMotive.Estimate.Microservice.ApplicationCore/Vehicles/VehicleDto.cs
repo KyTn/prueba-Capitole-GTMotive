@@ -1,6 +1,6 @@
 using System;
 
-namespace GtMotive.Estimate.Microservice.ApplicationCore.Vehicles.Create;
+namespace GtMotive.Estimate.Microservice.ApplicationCore.Vehicles;
 
 public sealed record VehicleDto(
     Guid Id,

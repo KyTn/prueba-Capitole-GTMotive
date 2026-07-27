@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using GtMotive.Estimate.Microservice.ApplicationCore.Vehicles;
@@ -44,5 +46,14 @@ public sealed class MongoVehicleRepository : IVehicleRepository
         {
             throw new VehicleAlreadyExistsException();
         }
+    }
+
+    public async Task<IReadOnlyList<Vehicle>> GetAllAsync(CancellationToken cancellationToken)
+    {
+        var documents = await _vehicles
+            .Find(Builders<VehicleDocument>.Filter.Empty)
+            .ToListAsync(cancellationToken);
+
+        return documents.Select(VehicleMapper.ToDomain).ToArray();
     }
 }

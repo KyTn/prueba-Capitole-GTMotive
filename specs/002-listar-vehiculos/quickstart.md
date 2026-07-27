@@ -64,3 +64,15 @@ docker compose build
 ```
 
 All unit, functional and infrastructure tests must pass. The infrastructure suite must verify `GET /vehicles` through Host for a populated fleet and an empty fleet. The functional suite must not reference Host, and the unit suite must not use infrastructure.
+
+## Verified result
+
+Validated on 2026-07-27:
+
+- Restore completed successfully from the configured package sources.
+- Release build completed with zero warnings and zero errors.
+- 12 unit, 6 functional and 7 infrastructure tests passed.
+- `docker compose config` and `docker compose build` completed successfully.
+- Compose reported MongoDB healthy and the Host listening on port `8080`.
+- Containerized `GET /vehicles` returned the complete persisted collection.
+- Runtime Swagger exposed both `GET /vehicles` and the existing `POST /vehicles`; GET documents `200` and `500`.

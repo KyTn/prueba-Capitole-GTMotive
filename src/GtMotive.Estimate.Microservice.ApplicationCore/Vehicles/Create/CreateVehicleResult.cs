@@ -1,3 +1,5 @@
+using GtMotive.Estimate.Microservice.ApplicationCore.Vehicles;
+
 namespace GtMotive.Estimate.Microservice.ApplicationCore.Vehicles.Create;
 
 public enum CreateVehicleResultType

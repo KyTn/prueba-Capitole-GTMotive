@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using GtMotive.Estimate.Microservice.ApplicationCore.Common.Time;
@@ -54,5 +56,11 @@ internal sealed class InMemoryVehicleRepository : IVehicleRepository
         }
 
         return Task.CompletedTask;
+    }
+
+    public Task<IReadOnlyList<Vehicle>> GetAllAsync(CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+        return Task.FromResult<IReadOnlyList<Vehicle>>(_vehicles.Values.ToArray());
     }
 }
