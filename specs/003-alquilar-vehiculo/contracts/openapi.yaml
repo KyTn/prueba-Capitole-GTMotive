@@ -1,0 +1,104 @@
+openapi: 3.0.3
+info:
+  title: GT Motive Renting API - Rent Vehicle
+  version: 1.0.0
+paths:
+  /rentals:
+    post:
+      summary: Rent an available vehicle to a person
+      operationId: rentVehicle
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RentVehicleRequest'
+      responses:
+        '201':
+          description: Rental created
+          headers:
+            Location:
+              description: Reference to the created rental
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Rental'
+        '400':
+          description: Missing or malformed identifier
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '404':
+          description: Person or vehicle not found
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '409':
+          description: Person already has an active rental or vehicle is unavailable
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '500':
+          description: Unexpected failure without internal details
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+components:
+  schemas:
+    RentVehicleRequest:
+      type: object
+      required:
+        - personId
+        - vehicleId
+      properties:
+        personId:
+          type: string
+          format: uuid
+        vehicleId:
+          type: string
+          format: uuid
+      additionalProperties: false
+    Rental:
+      type: object
+      required:
+        - id
+        - personId
+        - vehicleId
+        - startedAt
+        - status
+      properties:
+        id:
+          type: string
+          format: uuid
+        personId:
+          type: string
+          format: uuid
+        vehicleId:
+          type: string
+          format: uuid
+        startedAt:
+          type: string
+          format: date-time
+        status:
+          type: string
+          enum:
+            - active
+    ProblemDetails:
+      type: object
+      properties:
+        type:
+          type: string
+        title:
+          type: string
+        status:
+          type: integer
+        detail:
+          type: string
+        code:
+          type: string
